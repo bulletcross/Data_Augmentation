@@ -3,7 +3,7 @@
 import tensorflow as tf
 import numpy as np
 import glob
-#import cv2
+import cv2
 import skimage.io as io
 from skimage.transform import rescale, resize
 from tqdm import tqdm
@@ -23,16 +23,16 @@ module has to be worked upon.
 """
 
 def process_image(img_path):
-    #img = cv2.imread(img_path)
-    img = io.imread(img_path)
+    img = cv2.imread(img_path)
+    #img = io.imread(img_path)
     if img is None:
         print("Unable to read " + img_path)
         return None
     # Convert back to RGB
-    #img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    img = cv2.resize(img, (128, 128), interpolation=cv2.INTER_CUBIC)
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     # Start preprocessing here, resizing with biliner interpolation
-    #img = cv2.resize(img, (128, 128), interpolation=cv2.INTER_LINEAR)
-    img = resize(img, (128, 128))
+    #img = resize(img, (128, 128))
     # End of preprocessing, return img
     return img
 
@@ -68,10 +68,11 @@ def prepare_tfrecord(img_path_list, labels):
             writer.write(example.SerializeToString())
     print("All image processed.")
     writer.close()
+    sys.stdout.flush()
 
 def img_label_list():
     file_list = glob.glob(dataset_path)
-    labels = [0 if 'Cat' in file_name else 1 for file_name in file_list]
+    labels = [0 if 'cat' in file_name or 'Cat' in file_name else 1 for file_name in file_list]
     return file_list, labels
 
 def main():
