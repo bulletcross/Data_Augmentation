@@ -15,6 +15,13 @@ import os
 dataset_path = 'Dataset/train/*.jpg'
 out_file = 'Dataset/dataset_bin.tfrecords'
 
+"""
+Note: This is not augmnetation on fly, this does create static
+augmented data tfrecord file
+For on the fly augmentation, train_data_pipeline in data_pipeline
+module has to be worked upon.
+"""
+
 def process_image(img_path):
     #img = cv2.imread(img_path)
     img = io.imread(img_path)
