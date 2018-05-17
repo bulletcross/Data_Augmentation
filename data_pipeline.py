@@ -17,6 +17,7 @@ def tfrecord_parser(record_file_path):
                 name = 'parse_op')
     # Revert from string byte to int32
     img = tf.decode_raw(parse_op['raw_img'], tf.uint8, name = 'byte_to_int8_op')
+    # Casting to float for inputing data to train for float precision
     img = tf.cast(img, tf.float32, name = 'int8_to_int32_op')
     img = tf.reshape(img, shape=[128, 128, 3], name = 'reshape_op')
     label = tf.cast(parse_op['label'], tf.int32, name = 'label_cast_op')

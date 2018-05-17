@@ -31,13 +31,12 @@ def process_image(img_path):
     # Convert back to RGB
     img = cv2.resize(img, (128, 128), interpolation=cv2.INTER_CUBIC)
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    # Start preprocessing here, resizing with biliner interpolation
-    #img = resize(img, (128, 128))
-    # End of preprocessing, return img
     return img
 
+# This is the main function for augmenting with certain degree
 def img_augment(img, options):
     # Options is a list of options for img augmentation
+    # For now, we do nothing until theoretical analysis
     img_list = [img] # TO-DO
     return img_list
 

@@ -19,7 +19,6 @@ def tfrecord_parser(record_file_path):
                 name = 'parse_op')
     # Revert from string byte to int32
     img = tf.decode_raw(parse_op['raw_img'], tf.uint8, name = 'byte_to_int8_op')
-    img = tf.cast(img, tf.float32, name = 'int8_to_int32_op')
     img = tf.reshape(img, shape=[128, 128, 3], name = 'reshape_op')
     label = tf.cast(parse_op['label'], tf.int32, name = 'label_cast_op')
     return img, label
@@ -28,9 +27,7 @@ def get_iterator():
     dataset = tf.data.TFRecordDataset(filenames = [data_path],
                                         num_parallel_reads = 2)
     dataset = dataset.map(tfrecord_parser)
-    #dataset = dataset.repeat(1)
     dataset = dataset.batch(1)
-
     iterator = dataset.make_initializable_iterator()
     img, label = iterator.get_next()
     return img, label, iterator
@@ -39,13 +36,13 @@ def main():
     img, label, iter = get_iterator()
     with tf.Session() as sess:
         sess.run(iter.initializer)
-        out_img, out_label = sess.run([img, label])
-
-        print(str(out_label))
-        print(out_img[0].shape)
-        cv2.imshow('image', out_img[0])
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
+        while True:
+            out_img, out_label = sess.run([img, label])
+            print(str(out_label))
+            print(out_img[0].shape)
+            cv2.imshow('image', out_img[0])
+            cv2.waitKey(0)
+            cv2.destroyAllWindows()
 
 if __name__=='__main__':
     main()
